@@ -31,6 +31,11 @@ type EmploymentRateData struct {
 }
 
 type GenderIdentity struct {
+	Meta *Meta                 `json:"Meta"`
+	Data []*GenderIdentityData `json:"Data"`
+}
+
+type GenderIdentityData struct {
 	Location           *string `json:"location"`
 	Allothergenders    *string `json:"allothergenders"`
 	Differentfrombirth *string `json:"differentfrombirth"`
@@ -49,10 +54,55 @@ type Meta struct {
 }
 
 type Population struct {
+	Meta *Meta                 `json:"Meta"`
+	Data []*PopulationRateData `json:"Data"`
+}
+
+type PopulationRateData struct {
 	Timeperiod *string `json:"timeperiod"`
 	Ukpop      *string `json:"ukpop"`
 	Engpop     *string `json:"engpop"`
 	Wapop      *string `json:"wapop"`
 	Nipop      *string `json:"nipop"`
 	Scopop     *string `json:"scopop"`
+}
+
+type RegionalSexuality struct {
+	Meta *Meta                    `json:"Meta"`
+	Data []*RegionalSexualityData `json:"Data"`
+}
+
+type RegionalSexualityData struct {
+	Location               *string `json:"location"`
+	Timeperiod             *string `json:"timeperiod"`
+	Heterosexual           *string `json:"heterosexual"`
+	Heterosexualpercentage *string `json:"heterosexualpercentage"`
+	Gaylesbian             *string `json:"gaylesbian"`
+	Gaylesbianpercentage   *string `json:"gaylesbianpercentage"`
+	Bisexual               *string `json:"bisexual"`
+	Bisexualpercentage     *string `json:"bisexualpercentage"`
+	Other                  *string `json:"other"`
+	Otherpercentage        *string `json:"otherpercentage"`
+	Unanswered             *string `json:"unanswered"`
+	Unansweredpercentage   *string `json:"unansweredpercentage"`
+}
+
+type Sexuality struct {
+	Meta *Meta            `json:"Meta"`
+	Data []*SexualityData `json:"Data"`
+}
+
+type SexualityData struct {
+	Timeperiod             *string `json:"timeperiod"`
+	Gender                 *string `json:"gender"`
+	Heterosexual           *string `json:"heterosexual"`
+	Heterosexualpercentage *string `json:"heterosexualpercentage"`
+	Gaylesbian             *string `json:"gaylesbian"`
+	Gaylesbianpercentage   *string `json:"gaylesbianpercentage"`
+	Bisexual               *string `json:"bisexual"`
+	Bisexualpercentage     *string `json:"bisexualpercentage"`
+	Other                  *string `json:"other"`
+	Otherpercentage        *string `json:"otherpercentage"`
+	Unanswered             *string `json:"unanswered"`
+	Unansweredpercentage   *string `json:"unansweredpercentage"`
 }

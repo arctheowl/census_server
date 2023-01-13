@@ -8,10 +8,18 @@ type Query {
   MonthlyEmploymentRate: EmploymentRate!
   QuarterlyEmploymentRate: EmploymentRate!
   EmploymentRateYear(Year: String!): EmploymentRateData!
-  Population: [Population!]
+  Population: Population!
   PopulationYear(Year: String!): Population!
-  GenderIdentity: [GenderIdentity!]
+  GenderIdentity: GenderIdentity!
+  Sexuality: Sexuality!
+  RegionalSexuality: RegionalSexuality!
   ping: String!
+}
+
+type Meta {
+  Source: String
+  LastUpdated: String
+  NextRelease: String
 }
 
 type EmploymentRate {
@@ -19,7 +27,25 @@ type EmploymentRate {
   Data: [EmploymentRateData]
 }
 
+type GenderIdentity {
+  Meta: Meta
+  Data: [GenderIdentityData]
+}
 
+type Sexuality {
+  Meta: Meta
+  Data: [SexualityData]
+}
+
+type RegionalSexuality {
+  Meta: Meta
+  Data: [RegionalSexualityData]
+}
+
+type Population {
+  Meta: Meta
+  Data: [PopulationRateData]
+}
 
 type EmploymentRateData {
   timeperiod: String
@@ -44,7 +70,7 @@ type EmploymentRateData {
   allaged5064: String
 }
 
-type Population {
+type PopulationRateData {
   timeperiod: String
   ukpop: String
   engpop: String
@@ -53,20 +79,44 @@ type Population {
   scopop: String
 }
 
-type GenderIdentity {
-	location: String
-	allothergenders: String
-	differentfrombirth: String	
-	sameasbirth: String
-	nonbinary: String	
-	transman: String	
-	transwoman: String
+type GenderIdentityData{
+  location: String
+  allothergenders: String
+  differentfrombirth: String	
+  sameasbirth: String
+  nonbinary: String	
+  transman: String	
+  transwoman: String
   unanswered: String		
-	total: String
+  total: String
 }
 
-type Meta {
-  Source: String
-  LastUpdated: String
-  NextRelease: String
+type SexualityData{
+  timeperiod: String	
+  gender: String	
+  heterosexual: String	
+  heterosexualpercentage: String	
+  gaylesbian: String	
+  gaylesbianpercentage: String	
+  bisexual: String	
+  bisexualpercentage: String	
+  other: String	
+  otherpercentage: String	
+  unanswered: String	
+  unansweredpercentage: String
+}
+
+type RegionalSexualityData{
+  location: String	
+  timeperiod: String	
+  heterosexual: String	
+  heterosexualpercentage: String	
+  gaylesbian: String	
+  gaylesbianpercentage: String	
+  bisexual: String	
+  bisexualpercentage: String	
+  other: String	
+  otherpercentage: String	
+  unanswered: String	
+  unansweredpercentage: String
 }

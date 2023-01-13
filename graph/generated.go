@@ -73,6 +73,11 @@ type ComplexityRoot struct {
 	}
 
 	GenderIdentity struct {
+		Data func(childComplexity int) int
+		Meta func(childComplexity int) int
+	}
+
+	GenderIdentityData struct {
 		Allothergenders    func(childComplexity int) int
 		Differentfrombirth func(childComplexity int) int
 		Location           func(childComplexity int) int
@@ -91,6 +96,11 @@ type ComplexityRoot struct {
 	}
 
 	Population struct {
+		Data func(childComplexity int) int
+		Meta func(childComplexity int) int
+	}
+
+	PopulationRateData struct {
 		Engpop     func(childComplexity int) int
 		Nipop      func(childComplexity int) int
 		Scopop     func(childComplexity int) int
@@ -108,7 +118,49 @@ type ComplexityRoot struct {
 		Population              func(childComplexity int) int
 		PopulationYear          func(childComplexity int, year string) int
 		QuarterlyEmploymentRate func(childComplexity int) int
+		RegionalSexuality       func(childComplexity int) int
+		Sexuality               func(childComplexity int) int
 		YearlyEmploymentRate    func(childComplexity int) int
+	}
+
+	RegionalSexuality struct {
+		Data func(childComplexity int) int
+		Meta func(childComplexity int) int
+	}
+
+	RegionalSexualityData struct {
+		Bisexual               func(childComplexity int) int
+		Bisexualpercentage     func(childComplexity int) int
+		Gaylesbian             func(childComplexity int) int
+		Gaylesbianpercentage   func(childComplexity int) int
+		Heterosexual           func(childComplexity int) int
+		Heterosexualpercentage func(childComplexity int) int
+		Location               func(childComplexity int) int
+		Other                  func(childComplexity int) int
+		Otherpercentage        func(childComplexity int) int
+		Timeperiod             func(childComplexity int) int
+		Unanswered             func(childComplexity int) int
+		Unansweredpercentage   func(childComplexity int) int
+	}
+
+	Sexuality struct {
+		Data func(childComplexity int) int
+		Meta func(childComplexity int) int
+	}
+
+	SexualityData struct {
+		Bisexual               func(childComplexity int) int
+		Bisexualpercentage     func(childComplexity int) int
+		Gaylesbian             func(childComplexity int) int
+		Gaylesbianpercentage   func(childComplexity int) int
+		Gender                 func(childComplexity int) int
+		Heterosexual           func(childComplexity int) int
+		Heterosexualpercentage func(childComplexity int) int
+		Other                  func(childComplexity int) int
+		Otherpercentage        func(childComplexity int) int
+		Timeperiod             func(childComplexity int) int
+		Unanswered             func(childComplexity int) int
+		Unansweredpercentage   func(childComplexity int) int
 	}
 }
 
@@ -118,9 +170,11 @@ type QueryResolver interface {
 	MonthlyEmploymentRate(ctx context.Context) (*model.EmploymentRate, error)
 	QuarterlyEmploymentRate(ctx context.Context) (*model.EmploymentRate, error)
 	EmploymentRateYear(ctx context.Context, year string) (*model.EmploymentRateData, error)
-	Population(ctx context.Context) ([]*model.Population, error)
+	Population(ctx context.Context) (*model.Population, error)
 	PopulationYear(ctx context.Context, year string) (*model.Population, error)
-	GenderIdentity(ctx context.Context) ([]*model.GenderIdentity, error)
+	GenderIdentity(ctx context.Context) (*model.GenderIdentity, error)
+	Sexuality(ctx context.Context) (*model.Sexuality, error)
+	RegionalSexuality(ctx context.Context) (*model.RegionalSexuality, error)
 	Ping(ctx context.Context) (string, error)
 }
 
@@ -293,68 +347,82 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.EmploymentRateData.Timeperiod(childComplexity), true
 
-	case "GenderIdentity.allothergenders":
-		if e.complexity.GenderIdentity.Allothergenders == nil {
+	case "GenderIdentity.Data":
+		if e.complexity.GenderIdentity.Data == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Allothergenders(childComplexity), true
+		return e.complexity.GenderIdentity.Data(childComplexity), true
 
-	case "GenderIdentity.differentfrombirth":
-		if e.complexity.GenderIdentity.Differentfrombirth == nil {
+	case "GenderIdentity.Meta":
+		if e.complexity.GenderIdentity.Meta == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Differentfrombirth(childComplexity), true
+		return e.complexity.GenderIdentity.Meta(childComplexity), true
 
-	case "GenderIdentity.location":
-		if e.complexity.GenderIdentity.Location == nil {
+	case "GenderIdentityData.allothergenders":
+		if e.complexity.GenderIdentityData.Allothergenders == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Location(childComplexity), true
+		return e.complexity.GenderIdentityData.Allothergenders(childComplexity), true
 
-	case "GenderIdentity.nonbinary":
-		if e.complexity.GenderIdentity.Nonbinary == nil {
+	case "GenderIdentityData.differentfrombirth":
+		if e.complexity.GenderIdentityData.Differentfrombirth == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Nonbinary(childComplexity), true
+		return e.complexity.GenderIdentityData.Differentfrombirth(childComplexity), true
 
-	case "GenderIdentity.sameasbirth":
-		if e.complexity.GenderIdentity.Sameasbirth == nil {
+	case "GenderIdentityData.location":
+		if e.complexity.GenderIdentityData.Location == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Sameasbirth(childComplexity), true
+		return e.complexity.GenderIdentityData.Location(childComplexity), true
 
-	case "GenderIdentity.total":
-		if e.complexity.GenderIdentity.Total == nil {
+	case "GenderIdentityData.nonbinary":
+		if e.complexity.GenderIdentityData.Nonbinary == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Total(childComplexity), true
+		return e.complexity.GenderIdentityData.Nonbinary(childComplexity), true
 
-	case "GenderIdentity.transman":
-		if e.complexity.GenderIdentity.Transman == nil {
+	case "GenderIdentityData.sameasbirth":
+		if e.complexity.GenderIdentityData.Sameasbirth == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Transman(childComplexity), true
+		return e.complexity.GenderIdentityData.Sameasbirth(childComplexity), true
 
-	case "GenderIdentity.transwoman":
-		if e.complexity.GenderIdentity.Transwoman == nil {
+	case "GenderIdentityData.total":
+		if e.complexity.GenderIdentityData.Total == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Transwoman(childComplexity), true
+		return e.complexity.GenderIdentityData.Total(childComplexity), true
 
-	case "GenderIdentity.unanswered":
-		if e.complexity.GenderIdentity.Unanswered == nil {
+	case "GenderIdentityData.transman":
+		if e.complexity.GenderIdentityData.Transman == nil {
 			break
 		}
 
-		return e.complexity.GenderIdentity.Unanswered(childComplexity), true
+		return e.complexity.GenderIdentityData.Transman(childComplexity), true
+
+	case "GenderIdentityData.transwoman":
+		if e.complexity.GenderIdentityData.Transwoman == nil {
+			break
+		}
+
+		return e.complexity.GenderIdentityData.Transwoman(childComplexity), true
+
+	case "GenderIdentityData.unanswered":
+		if e.complexity.GenderIdentityData.Unanswered == nil {
+			break
+		}
+
+		return e.complexity.GenderIdentityData.Unanswered(childComplexity), true
 
 	case "Meta.LastUpdated":
 		if e.complexity.Meta.LastUpdated == nil {
@@ -377,47 +445,61 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Meta.Source(childComplexity), true
 
-	case "Population.engpop":
-		if e.complexity.Population.Engpop == nil {
+	case "Population.Data":
+		if e.complexity.Population.Data == nil {
 			break
 		}
 
-		return e.complexity.Population.Engpop(childComplexity), true
+		return e.complexity.Population.Data(childComplexity), true
 
-	case "Population.nipop":
-		if e.complexity.Population.Nipop == nil {
+	case "Population.Meta":
+		if e.complexity.Population.Meta == nil {
 			break
 		}
 
-		return e.complexity.Population.Nipop(childComplexity), true
+		return e.complexity.Population.Meta(childComplexity), true
 
-	case "Population.scopop":
-		if e.complexity.Population.Scopop == nil {
+	case "PopulationRateData.engpop":
+		if e.complexity.PopulationRateData.Engpop == nil {
 			break
 		}
 
-		return e.complexity.Population.Scopop(childComplexity), true
+		return e.complexity.PopulationRateData.Engpop(childComplexity), true
 
-	case "Population.timeperiod":
-		if e.complexity.Population.Timeperiod == nil {
+	case "PopulationRateData.nipop":
+		if e.complexity.PopulationRateData.Nipop == nil {
 			break
 		}
 
-		return e.complexity.Population.Timeperiod(childComplexity), true
+		return e.complexity.PopulationRateData.Nipop(childComplexity), true
 
-	case "Population.ukpop":
-		if e.complexity.Population.Ukpop == nil {
+	case "PopulationRateData.scopop":
+		if e.complexity.PopulationRateData.Scopop == nil {
 			break
 		}
 
-		return e.complexity.Population.Ukpop(childComplexity), true
+		return e.complexity.PopulationRateData.Scopop(childComplexity), true
 
-	case "Population.wapop":
-		if e.complexity.Population.Wapop == nil {
+	case "PopulationRateData.timeperiod":
+		if e.complexity.PopulationRateData.Timeperiod == nil {
 			break
 		}
 
-		return e.complexity.Population.Wapop(childComplexity), true
+		return e.complexity.PopulationRateData.Timeperiod(childComplexity), true
+
+	case "PopulationRateData.ukpop":
+		if e.complexity.PopulationRateData.Ukpop == nil {
+			break
+		}
+
+		return e.complexity.PopulationRateData.Ukpop(childComplexity), true
+
+	case "PopulationRateData.wapop":
+		if e.complexity.PopulationRateData.Wapop == nil {
+			break
+		}
+
+		return e.complexity.PopulationRateData.Wapop(childComplexity), true
 
 	case "Query.EmploymentRate":
 		if e.complexity.Query.EmploymentRate == nil {
@@ -485,12 +567,222 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.QuarterlyEmploymentRate(childComplexity), true
 
+	case "Query.RegionalSexuality":
+		if e.complexity.Query.RegionalSexuality == nil {
+			break
+		}
+
+		return e.complexity.Query.RegionalSexuality(childComplexity), true
+
+	case "Query.Sexuality":
+		if e.complexity.Query.Sexuality == nil {
+			break
+		}
+
+		return e.complexity.Query.Sexuality(childComplexity), true
+
 	case "Query.YearlyEmploymentRate":
 		if e.complexity.Query.YearlyEmploymentRate == nil {
 			break
 		}
 
 		return e.complexity.Query.YearlyEmploymentRate(childComplexity), true
+
+	case "RegionalSexuality.Data":
+		if e.complexity.RegionalSexuality.Data == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexuality.Data(childComplexity), true
+
+	case "RegionalSexuality.Meta":
+		if e.complexity.RegionalSexuality.Meta == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexuality.Meta(childComplexity), true
+
+	case "RegionalSexualityData.bisexual":
+		if e.complexity.RegionalSexualityData.Bisexual == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Bisexual(childComplexity), true
+
+	case "RegionalSexualityData.bisexualpercentage":
+		if e.complexity.RegionalSexualityData.Bisexualpercentage == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Bisexualpercentage(childComplexity), true
+
+	case "RegionalSexualityData.gaylesbian":
+		if e.complexity.RegionalSexualityData.Gaylesbian == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Gaylesbian(childComplexity), true
+
+	case "RegionalSexualityData.gaylesbianpercentage":
+		if e.complexity.RegionalSexualityData.Gaylesbianpercentage == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Gaylesbianpercentage(childComplexity), true
+
+	case "RegionalSexualityData.heterosexual":
+		if e.complexity.RegionalSexualityData.Heterosexual == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Heterosexual(childComplexity), true
+
+	case "RegionalSexualityData.heterosexualpercentage":
+		if e.complexity.RegionalSexualityData.Heterosexualpercentage == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Heterosexualpercentage(childComplexity), true
+
+	case "RegionalSexualityData.location":
+		if e.complexity.RegionalSexualityData.Location == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Location(childComplexity), true
+
+	case "RegionalSexualityData.other":
+		if e.complexity.RegionalSexualityData.Other == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Other(childComplexity), true
+
+	case "RegionalSexualityData.otherpercentage":
+		if e.complexity.RegionalSexualityData.Otherpercentage == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Otherpercentage(childComplexity), true
+
+	case "RegionalSexualityData.timeperiod":
+		if e.complexity.RegionalSexualityData.Timeperiod == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Timeperiod(childComplexity), true
+
+	case "RegionalSexualityData.unanswered":
+		if e.complexity.RegionalSexualityData.Unanswered == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Unanswered(childComplexity), true
+
+	case "RegionalSexualityData.unansweredpercentage":
+		if e.complexity.RegionalSexualityData.Unansweredpercentage == nil {
+			break
+		}
+
+		return e.complexity.RegionalSexualityData.Unansweredpercentage(childComplexity), true
+
+	case "Sexuality.Data":
+		if e.complexity.Sexuality.Data == nil {
+			break
+		}
+
+		return e.complexity.Sexuality.Data(childComplexity), true
+
+	case "Sexuality.Meta":
+		if e.complexity.Sexuality.Meta == nil {
+			break
+		}
+
+		return e.complexity.Sexuality.Meta(childComplexity), true
+
+	case "SexualityData.bisexual":
+		if e.complexity.SexualityData.Bisexual == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Bisexual(childComplexity), true
+
+	case "SexualityData.bisexualpercentage":
+		if e.complexity.SexualityData.Bisexualpercentage == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Bisexualpercentage(childComplexity), true
+
+	case "SexualityData.gaylesbian":
+		if e.complexity.SexualityData.Gaylesbian == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Gaylesbian(childComplexity), true
+
+	case "SexualityData.gaylesbianpercentage":
+		if e.complexity.SexualityData.Gaylesbianpercentage == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Gaylesbianpercentage(childComplexity), true
+
+	case "SexualityData.gender":
+		if e.complexity.SexualityData.Gender == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Gender(childComplexity), true
+
+	case "SexualityData.heterosexual":
+		if e.complexity.SexualityData.Heterosexual == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Heterosexual(childComplexity), true
+
+	case "SexualityData.heterosexualpercentage":
+		if e.complexity.SexualityData.Heterosexualpercentage == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Heterosexualpercentage(childComplexity), true
+
+	case "SexualityData.other":
+		if e.complexity.SexualityData.Other == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Other(childComplexity), true
+
+	case "SexualityData.otherpercentage":
+		if e.complexity.SexualityData.Otherpercentage == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Otherpercentage(childComplexity), true
+
+	case "SexualityData.timeperiod":
+		if e.complexity.SexualityData.Timeperiod == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Timeperiod(childComplexity), true
+
+	case "SexualityData.unanswered":
+		if e.complexity.SexualityData.Unanswered == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Unanswered(childComplexity), true
+
+	case "SexualityData.unansweredpercentage":
+		if e.complexity.SexualityData.Unansweredpercentage == nil {
+			break
+		}
+
+		return e.complexity.SexualityData.Unansweredpercentage(childComplexity), true
 
 	}
 	return 0, false
@@ -1598,8 +1890,118 @@ func (ec *executionContext) fieldContext_EmploymentRateData_allaged5064(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_location(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_location(ctx, field)
+func (ec *executionContext) _GenderIdentity_Meta(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentity_Meta(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Meta, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Meta)
+	fc.Result = res
+	return ec.marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GenderIdentity_Meta(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GenderIdentity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Source":
+				return ec.fieldContext_Meta_Source(ctx, field)
+			case "LastUpdated":
+				return ec.fieldContext_Meta_LastUpdated(ctx, field)
+			case "NextRelease":
+				return ec.fieldContext_Meta_NextRelease(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Meta", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GenderIdentity_Data(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentity_Data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.GenderIdentityData)
+	fc.Result = res
+	return ec.marshalOGenderIdentityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_GenderIdentity_Data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "GenderIdentity",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "location":
+				return ec.fieldContext_GenderIdentityData_location(ctx, field)
+			case "allothergenders":
+				return ec.fieldContext_GenderIdentityData_allothergenders(ctx, field)
+			case "differentfrombirth":
+				return ec.fieldContext_GenderIdentityData_differentfrombirth(ctx, field)
+			case "sameasbirth":
+				return ec.fieldContext_GenderIdentityData_sameasbirth(ctx, field)
+			case "nonbinary":
+				return ec.fieldContext_GenderIdentityData_nonbinary(ctx, field)
+			case "transman":
+				return ec.fieldContext_GenderIdentityData_transman(ctx, field)
+			case "transwoman":
+				return ec.fieldContext_GenderIdentityData_transwoman(ctx, field)
+			case "unanswered":
+				return ec.fieldContext_GenderIdentityData_unanswered(ctx, field)
+			case "total":
+				return ec.fieldContext_GenderIdentityData_total(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GenderIdentityData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _GenderIdentityData_location(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_location(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1626,9 +2028,9 @@ func (ec *executionContext) _GenderIdentity_location(ctx context.Context, field 
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_location(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_location(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1639,8 +2041,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_location(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_allothergenders(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_allothergenders(ctx, field)
+func (ec *executionContext) _GenderIdentityData_allothergenders(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_allothergenders(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1667,9 +2069,9 @@ func (ec *executionContext) _GenderIdentity_allothergenders(ctx context.Context,
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_allothergenders(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_allothergenders(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1680,8 +2082,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_allothergenders(ctx cont
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_differentfrombirth(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_differentfrombirth(ctx, field)
+func (ec *executionContext) _GenderIdentityData_differentfrombirth(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_differentfrombirth(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1708,9 +2110,9 @@ func (ec *executionContext) _GenderIdentity_differentfrombirth(ctx context.Conte
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_differentfrombirth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_differentfrombirth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1721,8 +2123,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_differentfrombirth(ctx c
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_sameasbirth(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_sameasbirth(ctx, field)
+func (ec *executionContext) _GenderIdentityData_sameasbirth(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_sameasbirth(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1749,9 +2151,9 @@ func (ec *executionContext) _GenderIdentity_sameasbirth(ctx context.Context, fie
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_sameasbirth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_sameasbirth(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1762,8 +2164,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_sameasbirth(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_nonbinary(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_nonbinary(ctx, field)
+func (ec *executionContext) _GenderIdentityData_nonbinary(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_nonbinary(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1790,9 +2192,9 @@ func (ec *executionContext) _GenderIdentity_nonbinary(ctx context.Context, field
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_nonbinary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_nonbinary(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1803,8 +2205,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_nonbinary(ctx context.Co
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_transman(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_transman(ctx, field)
+func (ec *executionContext) _GenderIdentityData_transman(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_transman(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1831,9 +2233,9 @@ func (ec *executionContext) _GenderIdentity_transman(ctx context.Context, field 
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_transman(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_transman(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1844,8 +2246,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_transman(ctx context.Con
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_transwoman(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_transwoman(ctx, field)
+func (ec *executionContext) _GenderIdentityData_transwoman(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_transwoman(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1872,9 +2274,9 @@ func (ec *executionContext) _GenderIdentity_transwoman(ctx context.Context, fiel
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_transwoman(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_transwoman(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1885,8 +2287,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_transwoman(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_unanswered(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_unanswered(ctx, field)
+func (ec *executionContext) _GenderIdentityData_unanswered(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_unanswered(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1913,9 +2315,9 @@ func (ec *executionContext) _GenderIdentity_unanswered(ctx context.Context, fiel
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_unanswered(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_unanswered(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -1926,8 +2328,8 @@ func (ec *executionContext) fieldContext_GenderIdentity_unanswered(ctx context.C
 	return fc, nil
 }
 
-func (ec *executionContext) _GenderIdentity_total(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentity) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_GenderIdentity_total(ctx, field)
+func (ec *executionContext) _GenderIdentityData_total(ctx context.Context, field graphql.CollectedField, obj *model.GenderIdentityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_GenderIdentityData_total(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -1954,9 +2356,9 @@ func (ec *executionContext) _GenderIdentity_total(ctx context.Context, field gra
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_GenderIdentity_total(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_GenderIdentityData_total(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "GenderIdentity",
+		Object:     "GenderIdentityData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2090,8 +2492,112 @@ func (ec *executionContext) fieldContext_Meta_NextRelease(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_timeperiod(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_timeperiod(ctx, field)
+func (ec *executionContext) _Population_Meta(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Population_Meta(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Meta, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Meta)
+	fc.Result = res
+	return ec.marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Population_Meta(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Population",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Source":
+				return ec.fieldContext_Meta_Source(ctx, field)
+			case "LastUpdated":
+				return ec.fieldContext_Meta_LastUpdated(ctx, field)
+			case "NextRelease":
+				return ec.fieldContext_Meta_NextRelease(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Meta", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Population_Data(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Population_Data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.PopulationRateData)
+	fc.Result = res
+	return ec.marshalOPopulationRateData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐPopulationRateData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Population_Data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Population",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "timeperiod":
+				return ec.fieldContext_PopulationRateData_timeperiod(ctx, field)
+			case "ukpop":
+				return ec.fieldContext_PopulationRateData_ukpop(ctx, field)
+			case "engpop":
+				return ec.fieldContext_PopulationRateData_engpop(ctx, field)
+			case "wapop":
+				return ec.fieldContext_PopulationRateData_wapop(ctx, field)
+			case "nipop":
+				return ec.fieldContext_PopulationRateData_nipop(ctx, field)
+			case "scopop":
+				return ec.fieldContext_PopulationRateData_scopop(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type PopulationRateData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _PopulationRateData_timeperiod(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_timeperiod(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2118,9 +2624,9 @@ func (ec *executionContext) _Population_timeperiod(ctx context.Context, field gr
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_timeperiod(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_timeperiod(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2131,8 +2637,8 @@ func (ec *executionContext) fieldContext_Population_timeperiod(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_ukpop(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_ukpop(ctx, field)
+func (ec *executionContext) _PopulationRateData_ukpop(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_ukpop(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2159,9 +2665,9 @@ func (ec *executionContext) _Population_ukpop(ctx context.Context, field graphql
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_ukpop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_ukpop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2172,8 +2678,8 @@ func (ec *executionContext) fieldContext_Population_ukpop(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_engpop(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_engpop(ctx, field)
+func (ec *executionContext) _PopulationRateData_engpop(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_engpop(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2200,9 +2706,9 @@ func (ec *executionContext) _Population_engpop(ctx context.Context, field graphq
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_engpop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_engpop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2213,8 +2719,8 @@ func (ec *executionContext) fieldContext_Population_engpop(ctx context.Context, 
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_wapop(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_wapop(ctx, field)
+func (ec *executionContext) _PopulationRateData_wapop(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_wapop(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2241,9 +2747,9 @@ func (ec *executionContext) _Population_wapop(ctx context.Context, field graphql
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_wapop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_wapop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2254,8 +2760,8 @@ func (ec *executionContext) fieldContext_Population_wapop(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_nipop(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_nipop(ctx, field)
+func (ec *executionContext) _PopulationRateData_nipop(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_nipop(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2282,9 +2788,9 @@ func (ec *executionContext) _Population_nipop(ctx context.Context, field graphql
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_nipop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_nipop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2295,8 +2801,8 @@ func (ec *executionContext) fieldContext_Population_nipop(ctx context.Context, f
 	return fc, nil
 }
 
-func (ec *executionContext) _Population_scopop(ctx context.Context, field graphql.CollectedField, obj *model.Population) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Population_scopop(ctx, field)
+func (ec *executionContext) _PopulationRateData_scopop(ctx context.Context, field graphql.CollectedField, obj *model.PopulationRateData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_PopulationRateData_scopop(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -2323,9 +2829,9 @@ func (ec *executionContext) _Population_scopop(ctx context.Context, field graphq
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Population_scopop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_PopulationRateData_scopop(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
-		Object:     "Population",
+		Object:     "PopulationRateData",
 		Field:      field,
 		IsMethod:   false,
 		IsResolver: false,
@@ -2654,11 +3160,14 @@ func (ec *executionContext) _Query_Population(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Population)
+	res := resTmp.(*model.Population)
 	fc.Result = res
-	return ec.marshalOPopulation2ᚕᚖcensus_serverᚋgraphᚋmodelᚐPopulationᚄ(ctx, field.Selections, res)
+	return ec.marshalNPopulation2ᚖcensus_serverᚋgraphᚋmodelᚐPopulation(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_Population(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2669,18 +3178,10 @@ func (ec *executionContext) fieldContext_Query_Population(ctx context.Context, f
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "timeperiod":
-				return ec.fieldContext_Population_timeperiod(ctx, field)
-			case "ukpop":
-				return ec.fieldContext_Population_ukpop(ctx, field)
-			case "engpop":
-				return ec.fieldContext_Population_engpop(ctx, field)
-			case "wapop":
-				return ec.fieldContext_Population_wapop(ctx, field)
-			case "nipop":
-				return ec.fieldContext_Population_nipop(ctx, field)
-			case "scopop":
-				return ec.fieldContext_Population_scopop(ctx, field)
+			case "Meta":
+				return ec.fieldContext_Population_Meta(ctx, field)
+			case "Data":
+				return ec.fieldContext_Population_Data(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Population", field.Name)
 		},
@@ -2727,18 +3228,10 @@ func (ec *executionContext) fieldContext_Query_PopulationYear(ctx context.Contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "timeperiod":
-				return ec.fieldContext_Population_timeperiod(ctx, field)
-			case "ukpop":
-				return ec.fieldContext_Population_ukpop(ctx, field)
-			case "engpop":
-				return ec.fieldContext_Population_engpop(ctx, field)
-			case "wapop":
-				return ec.fieldContext_Population_wapop(ctx, field)
-			case "nipop":
-				return ec.fieldContext_Population_nipop(ctx, field)
-			case "scopop":
-				return ec.fieldContext_Population_scopop(ctx, field)
+			case "Meta":
+				return ec.fieldContext_Population_Meta(ctx, field)
+			case "Data":
+				return ec.fieldContext_Population_Data(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Population", field.Name)
 		},
@@ -2778,11 +3271,14 @@ func (ec *executionContext) _Query_GenderIdentity(ctx context.Context, field gra
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.GenderIdentity)
+	res := resTmp.(*model.GenderIdentity)
 	fc.Result = res
-	return ec.marshalOGenderIdentity2ᚕᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityᚄ(ctx, field.Selections, res)
+	return ec.marshalNGenderIdentity2ᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentity(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_GenderIdentity(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2793,26 +3289,112 @@ func (ec *executionContext) fieldContext_Query_GenderIdentity(ctx context.Contex
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "location":
-				return ec.fieldContext_GenderIdentity_location(ctx, field)
-			case "allothergenders":
-				return ec.fieldContext_GenderIdentity_allothergenders(ctx, field)
-			case "differentfrombirth":
-				return ec.fieldContext_GenderIdentity_differentfrombirth(ctx, field)
-			case "sameasbirth":
-				return ec.fieldContext_GenderIdentity_sameasbirth(ctx, field)
-			case "nonbinary":
-				return ec.fieldContext_GenderIdentity_nonbinary(ctx, field)
-			case "transman":
-				return ec.fieldContext_GenderIdentity_transman(ctx, field)
-			case "transwoman":
-				return ec.fieldContext_GenderIdentity_transwoman(ctx, field)
-			case "unanswered":
-				return ec.fieldContext_GenderIdentity_unanswered(ctx, field)
-			case "total":
-				return ec.fieldContext_GenderIdentity_total(ctx, field)
+			case "Meta":
+				return ec.fieldContext_GenderIdentity_Meta(ctx, field)
+			case "Data":
+				return ec.fieldContext_GenderIdentity_Data(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type GenderIdentity", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_Sexuality(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_Sexuality(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().Sexuality(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Sexuality)
+	fc.Result = res
+	return ec.marshalNSexuality2ᚖcensus_serverᚋgraphᚋmodelᚐSexuality(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_Sexuality(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Meta":
+				return ec.fieldContext_Sexuality_Meta(ctx, field)
+			case "Data":
+				return ec.fieldContext_Sexuality_Data(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Sexuality", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_RegionalSexuality(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_RegionalSexuality(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().RegionalSexuality(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.RegionalSexuality)
+	fc.Result = res
+	return ec.marshalNRegionalSexuality2ᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexuality(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_RegionalSexuality(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Meta":
+				return ec.fieldContext_RegionalSexuality_Meta(ctx, field)
+			case "Data":
+				return ec.fieldContext_RegionalSexuality_Data(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RegionalSexuality", field.Name)
 		},
 	}
 	return fc, nil
@@ -2986,6 +3568,1222 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 				return ec.fieldContext___Schema_directives(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type __Schema", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexuality_Meta(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexuality) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexuality_Meta(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Meta, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Meta)
+	fc.Result = res
+	return ec.marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexuality_Meta(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexuality",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Source":
+				return ec.fieldContext_Meta_Source(ctx, field)
+			case "LastUpdated":
+				return ec.fieldContext_Meta_LastUpdated(ctx, field)
+			case "NextRelease":
+				return ec.fieldContext_Meta_NextRelease(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Meta", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexuality_Data(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexuality) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexuality_Data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.RegionalSexualityData)
+	fc.Result = res
+	return ec.marshalORegionalSexualityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexualityData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexuality_Data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexuality",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "location":
+				return ec.fieldContext_RegionalSexualityData_location(ctx, field)
+			case "timeperiod":
+				return ec.fieldContext_RegionalSexualityData_timeperiod(ctx, field)
+			case "heterosexual":
+				return ec.fieldContext_RegionalSexualityData_heterosexual(ctx, field)
+			case "heterosexualpercentage":
+				return ec.fieldContext_RegionalSexualityData_heterosexualpercentage(ctx, field)
+			case "gaylesbian":
+				return ec.fieldContext_RegionalSexualityData_gaylesbian(ctx, field)
+			case "gaylesbianpercentage":
+				return ec.fieldContext_RegionalSexualityData_gaylesbianpercentage(ctx, field)
+			case "bisexual":
+				return ec.fieldContext_RegionalSexualityData_bisexual(ctx, field)
+			case "bisexualpercentage":
+				return ec.fieldContext_RegionalSexualityData_bisexualpercentage(ctx, field)
+			case "other":
+				return ec.fieldContext_RegionalSexualityData_other(ctx, field)
+			case "otherpercentage":
+				return ec.fieldContext_RegionalSexualityData_otherpercentage(ctx, field)
+			case "unanswered":
+				return ec.fieldContext_RegionalSexualityData_unanswered(ctx, field)
+			case "unansweredpercentage":
+				return ec.fieldContext_RegionalSexualityData_unansweredpercentage(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type RegionalSexualityData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_location(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_location(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Location, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_location(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_timeperiod(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_timeperiod(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Timeperiod, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_timeperiod(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_heterosexual(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_heterosexual(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Heterosexual, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_heterosexual(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_heterosexualpercentage(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_heterosexualpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Heterosexualpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_heterosexualpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_gaylesbian(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_gaylesbian(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gaylesbian, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_gaylesbian(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_gaylesbianpercentage(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_gaylesbianpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gaylesbianpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_gaylesbianpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_bisexual(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_bisexual(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bisexual, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_bisexual(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_bisexualpercentage(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_bisexualpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bisexualpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_bisexualpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_other(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_other(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Other, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_other(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_otherpercentage(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_otherpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Otherpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_otherpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_unanswered(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_unanswered(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Unanswered, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_unanswered(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _RegionalSexualityData_unansweredpercentage(ctx context.Context, field graphql.CollectedField, obj *model.RegionalSexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_RegionalSexualityData_unansweredpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Unansweredpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_RegionalSexualityData_unansweredpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "RegionalSexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Sexuality_Meta(ctx context.Context, field graphql.CollectedField, obj *model.Sexuality) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Sexuality_Meta(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Meta, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.Meta)
+	fc.Result = res
+	return ec.marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Sexuality_Meta(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Sexuality",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "Source":
+				return ec.fieldContext_Meta_Source(ctx, field)
+			case "LastUpdated":
+				return ec.fieldContext_Meta_LastUpdated(ctx, field)
+			case "NextRelease":
+				return ec.fieldContext_Meta_NextRelease(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Meta", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Sexuality_Data(ctx context.Context, field graphql.CollectedField, obj *model.Sexuality) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Sexuality_Data(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Data, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.([]*model.SexualityData)
+	fc.Result = res
+	return ec.marshalOSexualityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐSexualityData(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Sexuality_Data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Sexuality",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "timeperiod":
+				return ec.fieldContext_SexualityData_timeperiod(ctx, field)
+			case "gender":
+				return ec.fieldContext_SexualityData_gender(ctx, field)
+			case "heterosexual":
+				return ec.fieldContext_SexualityData_heterosexual(ctx, field)
+			case "heterosexualpercentage":
+				return ec.fieldContext_SexualityData_heterosexualpercentage(ctx, field)
+			case "gaylesbian":
+				return ec.fieldContext_SexualityData_gaylesbian(ctx, field)
+			case "gaylesbianpercentage":
+				return ec.fieldContext_SexualityData_gaylesbianpercentage(ctx, field)
+			case "bisexual":
+				return ec.fieldContext_SexualityData_bisexual(ctx, field)
+			case "bisexualpercentage":
+				return ec.fieldContext_SexualityData_bisexualpercentage(ctx, field)
+			case "other":
+				return ec.fieldContext_SexualityData_other(ctx, field)
+			case "otherpercentage":
+				return ec.fieldContext_SexualityData_otherpercentage(ctx, field)
+			case "unanswered":
+				return ec.fieldContext_SexualityData_unanswered(ctx, field)
+			case "unansweredpercentage":
+				return ec.fieldContext_SexualityData_unansweredpercentage(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type SexualityData", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_timeperiod(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_timeperiod(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Timeperiod, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_timeperiod(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_gender(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_gender(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gender, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_gender(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_heterosexual(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_heterosexual(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Heterosexual, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_heterosexual(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_heterosexualpercentage(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_heterosexualpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Heterosexualpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_heterosexualpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_gaylesbian(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_gaylesbian(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gaylesbian, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_gaylesbian(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_gaylesbianpercentage(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_gaylesbianpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Gaylesbianpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_gaylesbianpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_bisexual(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_bisexual(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bisexual, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_bisexual(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_bisexualpercentage(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_bisexualpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Bisexualpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_bisexualpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_other(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_other(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Other, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_other(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_otherpercentage(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_otherpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Otherpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_otherpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_unanswered(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_unanswered(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Unanswered, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_unanswered(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _SexualityData_unansweredpercentage(ctx context.Context, field graphql.CollectedField, obj *model.SexualityData) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SexualityData_unansweredpercentage(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Unansweredpercentage, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SexualityData_unansweredpercentage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SexualityData",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
 		},
 	}
 	return fc, nil
@@ -4912,41 +6710,70 @@ func (ec *executionContext) _GenderIdentity(ctx context.Context, sel ast.Selecti
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("GenderIdentity")
+		case "Meta":
+
+			out.Values[i] = ec._GenderIdentity_Meta(ctx, field, obj)
+
+		case "Data":
+
+			out.Values[i] = ec._GenderIdentity_Data(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var genderIdentityDataImplementors = []string{"GenderIdentityData"}
+
+func (ec *executionContext) _GenderIdentityData(ctx context.Context, sel ast.SelectionSet, obj *model.GenderIdentityData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, genderIdentityDataImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("GenderIdentityData")
 		case "location":
 
-			out.Values[i] = ec._GenderIdentity_location(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_location(ctx, field, obj)
 
 		case "allothergenders":
 
-			out.Values[i] = ec._GenderIdentity_allothergenders(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_allothergenders(ctx, field, obj)
 
 		case "differentfrombirth":
 
-			out.Values[i] = ec._GenderIdentity_differentfrombirth(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_differentfrombirth(ctx, field, obj)
 
 		case "sameasbirth":
 
-			out.Values[i] = ec._GenderIdentity_sameasbirth(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_sameasbirth(ctx, field, obj)
 
 		case "nonbinary":
 
-			out.Values[i] = ec._GenderIdentity_nonbinary(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_nonbinary(ctx, field, obj)
 
 		case "transman":
 
-			out.Values[i] = ec._GenderIdentity_transman(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_transman(ctx, field, obj)
 
 		case "transwoman":
 
-			out.Values[i] = ec._GenderIdentity_transwoman(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_transwoman(ctx, field, obj)
 
 		case "unanswered":
 
-			out.Values[i] = ec._GenderIdentity_unanswered(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_unanswered(ctx, field, obj)
 
 		case "total":
 
-			out.Values[i] = ec._GenderIdentity_total(ctx, field, obj)
+			out.Values[i] = ec._GenderIdentityData_total(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5002,29 +6829,58 @@ func (ec *executionContext) _Population(ctx context.Context, sel ast.SelectionSe
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Population")
+		case "Meta":
+
+			out.Values[i] = ec._Population_Meta(ctx, field, obj)
+
+		case "Data":
+
+			out.Values[i] = ec._Population_Data(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var populationRateDataImplementors = []string{"PopulationRateData"}
+
+func (ec *executionContext) _PopulationRateData(ctx context.Context, sel ast.SelectionSet, obj *model.PopulationRateData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, populationRateDataImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("PopulationRateData")
 		case "timeperiod":
 
-			out.Values[i] = ec._Population_timeperiod(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_timeperiod(ctx, field, obj)
 
 		case "ukpop":
 
-			out.Values[i] = ec._Population_ukpop(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_ukpop(ctx, field, obj)
 
 		case "engpop":
 
-			out.Values[i] = ec._Population_engpop(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_engpop(ctx, field, obj)
 
 		case "wapop":
 
-			out.Values[i] = ec._Population_wapop(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_wapop(ctx, field, obj)
 
 		case "nipop":
 
-			out.Values[i] = ec._Population_nipop(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_nipop(ctx, field, obj)
 
 		case "scopop":
 
-			out.Values[i] = ec._Population_scopop(ctx, field, obj)
+			out.Values[i] = ec._PopulationRateData_scopop(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5181,6 +7037,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_Population(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -5224,6 +7083,55 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_GenderIdentity(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "Sexuality":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_Sexuality(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx, innerFunc)
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return rrm(innerCtx)
+			})
+		case "RegionalSexuality":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_RegionalSexuality(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -5268,6 +7176,202 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query___schema(ctx, field)
 			})
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var regionalSexualityImplementors = []string{"RegionalSexuality"}
+
+func (ec *executionContext) _RegionalSexuality(ctx context.Context, sel ast.SelectionSet, obj *model.RegionalSexuality) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, regionalSexualityImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RegionalSexuality")
+		case "Meta":
+
+			out.Values[i] = ec._RegionalSexuality_Meta(ctx, field, obj)
+
+		case "Data":
+
+			out.Values[i] = ec._RegionalSexuality_Data(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var regionalSexualityDataImplementors = []string{"RegionalSexualityData"}
+
+func (ec *executionContext) _RegionalSexualityData(ctx context.Context, sel ast.SelectionSet, obj *model.RegionalSexualityData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, regionalSexualityDataImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("RegionalSexualityData")
+		case "location":
+
+			out.Values[i] = ec._RegionalSexualityData_location(ctx, field, obj)
+
+		case "timeperiod":
+
+			out.Values[i] = ec._RegionalSexualityData_timeperiod(ctx, field, obj)
+
+		case "heterosexual":
+
+			out.Values[i] = ec._RegionalSexualityData_heterosexual(ctx, field, obj)
+
+		case "heterosexualpercentage":
+
+			out.Values[i] = ec._RegionalSexualityData_heterosexualpercentage(ctx, field, obj)
+
+		case "gaylesbian":
+
+			out.Values[i] = ec._RegionalSexualityData_gaylesbian(ctx, field, obj)
+
+		case "gaylesbianpercentage":
+
+			out.Values[i] = ec._RegionalSexualityData_gaylesbianpercentage(ctx, field, obj)
+
+		case "bisexual":
+
+			out.Values[i] = ec._RegionalSexualityData_bisexual(ctx, field, obj)
+
+		case "bisexualpercentage":
+
+			out.Values[i] = ec._RegionalSexualityData_bisexualpercentage(ctx, field, obj)
+
+		case "other":
+
+			out.Values[i] = ec._RegionalSexualityData_other(ctx, field, obj)
+
+		case "otherpercentage":
+
+			out.Values[i] = ec._RegionalSexualityData_otherpercentage(ctx, field, obj)
+
+		case "unanswered":
+
+			out.Values[i] = ec._RegionalSexualityData_unanswered(ctx, field, obj)
+
+		case "unansweredpercentage":
+
+			out.Values[i] = ec._RegionalSexualityData_unansweredpercentage(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var sexualityImplementors = []string{"Sexuality"}
+
+func (ec *executionContext) _Sexuality(ctx context.Context, sel ast.SelectionSet, obj *model.Sexuality) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sexualityImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("Sexuality")
+		case "Meta":
+
+			out.Values[i] = ec._Sexuality_Meta(ctx, field, obj)
+
+		case "Data":
+
+			out.Values[i] = ec._Sexuality_Data(ctx, field, obj)
+
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var sexualityDataImplementors = []string{"SexualityData"}
+
+func (ec *executionContext) _SexualityData(ctx context.Context, sel ast.SelectionSet, obj *model.SexualityData) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, sexualityDataImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("SexualityData")
+		case "timeperiod":
+
+			out.Values[i] = ec._SexualityData_timeperiod(ctx, field, obj)
+
+		case "gender":
+
+			out.Values[i] = ec._SexualityData_gender(ctx, field, obj)
+
+		case "heterosexual":
+
+			out.Values[i] = ec._SexualityData_heterosexual(ctx, field, obj)
+
+		case "heterosexualpercentage":
+
+			out.Values[i] = ec._SexualityData_heterosexualpercentage(ctx, field, obj)
+
+		case "gaylesbian":
+
+			out.Values[i] = ec._SexualityData_gaylesbian(ctx, field, obj)
+
+		case "gaylesbianpercentage":
+
+			out.Values[i] = ec._SexualityData_gaylesbianpercentage(ctx, field, obj)
+
+		case "bisexual":
+
+			out.Values[i] = ec._SexualityData_bisexual(ctx, field, obj)
+
+		case "bisexualpercentage":
+
+			out.Values[i] = ec._SexualityData_bisexualpercentage(ctx, field, obj)
+
+		case "other":
+
+			out.Values[i] = ec._SexualityData_other(ctx, field, obj)
+
+		case "otherpercentage":
+
+			out.Values[i] = ec._SexualityData_otherpercentage(ctx, field, obj)
+
+		case "unanswered":
+
+			out.Values[i] = ec._SexualityData_unanswered(ctx, field, obj)
+
+		case "unansweredpercentage":
+
+			out.Values[i] = ec._SexualityData_unansweredpercentage(ctx, field, obj)
 
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
@@ -5641,6 +7745,10 @@ func (ec *executionContext) marshalNEmploymentRateData2ᚖcensus_serverᚋgraph�
 	return ec._EmploymentRateData(ctx, sel, v)
 }
 
+func (ec *executionContext) marshalNGenderIdentity2census_serverᚋgraphᚋmodelᚐGenderIdentity(ctx context.Context, sel ast.SelectionSet, v model.GenderIdentity) graphql.Marshaler {
+	return ec._GenderIdentity(ctx, sel, &v)
+}
+
 func (ec *executionContext) marshalNGenderIdentity2ᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentity(ctx context.Context, sel ast.SelectionSet, v *model.GenderIdentity) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -5663,6 +7771,34 @@ func (ec *executionContext) marshalNPopulation2ᚖcensus_serverᚋgraphᚋmodel�
 		return graphql.Null
 	}
 	return ec._Population(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNRegionalSexuality2census_serverᚋgraphᚋmodelᚐRegionalSexuality(ctx context.Context, sel ast.SelectionSet, v model.RegionalSexuality) graphql.Marshaler {
+	return ec._RegionalSexuality(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNRegionalSexuality2ᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexuality(ctx context.Context, sel ast.SelectionSet, v *model.RegionalSexuality) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._RegionalSexuality(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalNSexuality2census_serverᚋgraphᚋmodelᚐSexuality(ctx context.Context, sel ast.SelectionSet, v model.Sexuality) graphql.Marshaler {
+	return ec._Sexuality(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNSexuality2ᚖcensus_serverᚋgraphᚋmodelᚐSexuality(ctx context.Context, sel ast.SelectionSet, v *model.Sexuality) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._Sexuality(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {
@@ -6007,7 +8143,7 @@ func (ec *executionContext) marshalOEmploymentRateData2ᚖcensus_serverᚋgraph�
 	return ec._EmploymentRateData(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGenderIdentity2ᚕᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.GenderIdentity) graphql.Marshaler {
+func (ec *executionContext) marshalOGenderIdentityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityData(ctx context.Context, sel ast.SelectionSet, v []*model.GenderIdentityData) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6034,7 +8170,7 @@ func (ec *executionContext) marshalOGenderIdentity2ᚕᚖcensus_serverᚋgraph�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNGenderIdentity2ᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentity(ctx, sel, v[i])
+			ret[i] = ec.marshalOGenderIdentityData2ᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityData(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6045,13 +8181,14 @@ func (ec *executionContext) marshalOGenderIdentity2ᚕᚖcensus_serverᚋgraph�
 	}
 	wg.Wait()
 
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
 	return ret
+}
+
+func (ec *executionContext) marshalOGenderIdentityData2ᚖcensus_serverᚋgraphᚋmodelᚐGenderIdentityData(ctx context.Context, sel ast.SelectionSet, v *model.GenderIdentityData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GenderIdentityData(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta(ctx context.Context, sel ast.SelectionSet, v *model.Meta) graphql.Marshaler {
@@ -6061,7 +8198,7 @@ func (ec *executionContext) marshalOMeta2ᚖcensus_serverᚋgraphᚋmodelᚐMeta
 	return ec._Meta(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOPopulation2ᚕᚖcensus_serverᚋgraphᚋmodelᚐPopulationᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Population) graphql.Marshaler {
+func (ec *executionContext) marshalOPopulationRateData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐPopulationRateData(ctx context.Context, sel ast.SelectionSet, v []*model.PopulationRateData) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -6088,7 +8225,7 @@ func (ec *executionContext) marshalOPopulation2ᚕᚖcensus_serverᚋgraphᚋmod
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNPopulation2ᚖcensus_serverᚋgraphᚋmodelᚐPopulation(ctx, sel, v[i])
+			ret[i] = ec.marshalOPopulationRateData2ᚖcensus_serverᚋgraphᚋmodelᚐPopulationRateData(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -6099,13 +8236,110 @@ func (ec *executionContext) marshalOPopulation2ᚕᚖcensus_serverᚋgraphᚋmod
 	}
 	wg.Wait()
 
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
+	return ret
+}
+
+func (ec *executionContext) marshalOPopulationRateData2ᚖcensus_serverᚋgraphᚋmodelᚐPopulationRateData(ctx context.Context, sel ast.SelectionSet, v *model.PopulationRateData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
 	}
+	return ec._PopulationRateData(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalORegionalSexualityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexualityData(ctx context.Context, sel ast.SelectionSet, v []*model.RegionalSexualityData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalORegionalSexualityData2ᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexualityData(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
 
 	return ret
+}
+
+func (ec *executionContext) marshalORegionalSexualityData2ᚖcensus_serverᚋgraphᚋmodelᚐRegionalSexualityData(ctx context.Context, sel ast.SelectionSet, v *model.RegionalSexualityData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._RegionalSexualityData(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOSexualityData2ᚕᚖcensus_serverᚋgraphᚋmodelᚐSexualityData(ctx context.Context, sel ast.SelectionSet, v []*model.SexualityData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalOSexualityData2ᚖcensus_serverᚋgraphᚋmodelᚐSexualityData(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	return ret
+}
+
+func (ec *executionContext) marshalOSexualityData2ᚖcensus_serverᚋgraphᚋmodelᚐSexualityData(ctx context.Context, sel ast.SelectionSet, v *model.SexualityData) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._SexualityData(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {

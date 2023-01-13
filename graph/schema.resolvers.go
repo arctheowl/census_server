@@ -8,19 +8,9 @@ import (
 	"census_server/graph/model"
 	"context"
 	"fmt"
-	"os"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-)
-
-//Set env variables
-var (
-	host     = os.Getenv("PGHOST")
-	port     = os.Getenv("PGPORT")
-	user     = os.Getenv("PGUSER")
-	password = os.Getenv("PGPASSWORD")
-	dbname   = os.Getenv("PGDATABASE")
 )
 
 // EmploymentRate is the resolver for the employmentRate field.
@@ -47,7 +37,7 @@ func (r *queryResolver) EmploymentRate(ctx context.Context) (*model.EmploymentRa
 
 // YearlyEmploymentRate is the resolver for the YearlyEmploymentRate field.
 func (r *queryResolver) YearlyEmploymentRate(ctx context.Context) (*model.EmploymentRate, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -69,7 +59,7 @@ func (r *queryResolver) YearlyEmploymentRate(ctx context.Context) (*model.Employ
 
 // MonthlyEmploymentRate is the resolver for the MonthlyEmploymentRate field.
 func (r *queryResolver) MonthlyEmploymentRate(ctx context.Context) (*model.EmploymentRate, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -91,7 +81,7 @@ func (r *queryResolver) MonthlyEmploymentRate(ctx context.Context) (*model.Emplo
 
 // QuarterlyEmploymentRate is the resolver for the QuarterlyEmploymentRate field.
 func (r *queryResolver) QuarterlyEmploymentRate(ctx context.Context) (*model.EmploymentRate, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -113,7 +103,7 @@ func (r *queryResolver) QuarterlyEmploymentRate(ctx context.Context) (*model.Emp
 
 // EmploymentRateYear is the resolver for the EmploymentRateYear field.
 func (r *queryResolver) EmploymentRateYear(ctx context.Context, year string) (*model.EmploymentRateData, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -132,8 +122,8 @@ func (r *queryResolver) EmploymentRateYear(ctx context.Context, year string) (*m
 }
 
 // Population is the resolver for the Population field.
-func (r *queryResolver) Population(ctx context.Context) ([]*model.Population, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+func (r *queryResolver) Population(ctx context.Context) (*model.Population, error) {
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -143,15 +133,19 @@ func (r *queryResolver) Population(ctx context.Context) ([]*model.Population, er
 	db.AutoMigrate(&model.EmploymentRate{})
 	table := db.Table("censuspopulation")
 
-	var LargeResult []*model.Population
+	var LargeResult []*model.PopulationRateData
 	table.Find(&LargeResult)
 
-	return LargeResult, nil
+	source, lastUpdated, nextRelease := "https://www.ons.gov.uk/peoplepopulationandcommunity/populationandmigration/populationestimates/timeseries/ukpop/pop", "21/12/2022", "10/07/2023"
+	var FinalMeta = &model.Meta{Source: &source, LastUpdated: &lastUpdated, NextRelease: &nextRelease}
+	FinalResponse := model.Population{Data: LargeResult, Meta: FinalMeta}
+
+	return &FinalResponse, nil
 }
 
 // PopulationYear is the resolver for the PopulationYear field.
 func (r *queryResolver) PopulationYear(ctx context.Context, year string) (*model.Population, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -169,8 +163,8 @@ func (r *queryResolver) PopulationYear(ctx context.Context, year string) (*model
 }
 
 // GenderIdentity is the resolver for the GenderIdentity field.
-func (r *queryResolver) GenderIdentity(ctx context.Context) ([]*model.GenderIdentity, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+func (r *queryResolver) GenderIdentity(ctx context.Context) (*model.GenderIdentity, error) {
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
@@ -180,10 +174,60 @@ func (r *queryResolver) GenderIdentity(ctx context.Context) ([]*model.GenderIden
 	db.AutoMigrate(&model.EmploymentRate{})
 	table := db.Table("censusgender")
 
-	var LargeResult []*model.GenderIdentity
+	var LargeResult []*model.GenderIdentityData
 	table.Find(&LargeResult)
 
-	return LargeResult, nil
+	source, lastUpdated, nextRelease := "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/genderidentity/bulletins/genderidentityenglandandwales/census2021", "6/1/2023", "TBA"
+	var FinalMeta = &model.Meta{Source: &source, LastUpdated: &lastUpdated, NextRelease: &nextRelease}
+	FinalResponse := model.GenderIdentity{Data: LargeResult, Meta: FinalMeta}
+
+	return &FinalResponse, nil
+}
+
+// Sexuality is the resolver for the Sexuality field.
+func (r *queryResolver) Sexuality(ctx context.Context) (*model.Sexuality, error) {
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	} else {
+		fmt.Println("connected to database")
+	}
+	// db.AutoMigrate(&model.EmploymentRateData{})
+	table := db.Table("sexuality")
+
+	var LargeResult []*model.SexualityData
+	table.Find(&LargeResult)
+
+	fmt.Println(LargeResult[0])
+
+	source, lastUpdated, nextRelease := "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/sexuality/datasets/sexualidentityuk", "25/05/2022", "TBA"
+	var FinalMeta = &model.Meta{Source: &source, LastUpdated: &lastUpdated, NextRelease: &nextRelease}
+	FinalResponse := model.Sexuality{Data: LargeResult, Meta: FinalMeta}
+
+	return &FinalResponse, nil
+}
+
+// RegionalSexuality is the resolver for the RegionalSexuality field.
+func (r *queryResolver) RegionalSexuality(ctx context.Context) (*model.RegionalSexuality, error) {
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	} else {
+		fmt.Println("connected to database")
+	}
+	// db.AutoMigrate(&model.EmploymentRateData{})
+	table := db.Table("regionalsexuality")
+
+	var LargeResult []*model.RegionalSexualityData
+	table.Find(&LargeResult)
+
+	source, lastUpdated, nextRelease := "https://www.ons.gov.uk/peoplepopulationandcommunity/culturalidentity/sexuality/datasets/sexualidentityuk", "25/05/2022", "TBA"
+	var FinalMeta = &model.Meta{Source: &source, LastUpdated: &lastUpdated, NextRelease: &nextRelease}
+	FinalResponse := model.RegionalSexuality{Data: LargeResult, Meta: FinalMeta}
+
+	return &FinalResponse, nil
 }
 
 // Ping is the resolver for the ping field.
