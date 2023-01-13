@@ -8,14 +8,35 @@ import (
 	"census_server/graph/model"
 	"context"
 	"fmt"
+	"log"
+	"os"
 
+	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
+func getEnvVar(key string) string {
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal(err)
+	}
+	return os.Getenv(key)
+}
+
+//Set env variables
+var (
+	host     = getEnvVar("DATABASE_URL")
+	port     = getEnvVar("DATABASE_PORT")
+	user     = getEnvVar("DATABASE_USER")
+	password = getEnvVar("DATABASE_PASSWORD")
+	dbname   = getEnvVar("DATABASE_NAME")
+)
+
 // EmploymentRate is the resolver for the employmentRate field.
 func (r *queryResolver) EmploymentRate(ctx context.Context) (*model.EmploymentRate, error) {
-	dsn := "host=containers-us-west-144.railway.app dbname=railway port=5886 sslmode=disable user=postgres password=FUm1gB8FDVcqyXaReo8K"
+	dsn := fmt.Sprintf("host=%s dbname=%s port=%s sslmode=disable user=%s password=%s", host, dbname, port, user, password)
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
