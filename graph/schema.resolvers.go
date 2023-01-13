@@ -8,30 +8,19 @@ import (
 	"census_server/graph/model"
 	"context"
 	"fmt"
-	"log"
 	"os"
 
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
-func getEnvVar(key string) string {
-	err := godotenv.Load(".env")
-
-	if err != nil {
-		log.Fatal(err)
-	}
-	return os.Getenv(key)
-}
-
 //Set env variables
 var (
-	host     = getEnvVar("DATABASE_URL")
-	port     = getEnvVar("DATABASE_PORT")
-	user     = getEnvVar("DATABASE_USER")
-	password = getEnvVar("DATABASE_PASSWORD")
-	dbname   = getEnvVar("DATABASE_NAME")
+	host     = os.Getenv("PGHOST")
+	port     = os.Getenv("PGPORT")
+	user     = os.Getenv("PGUSER")
+	password = os.Getenv("PGPASSWORD")
+	dbname   = os.Getenv("PGDATABASE")
 )
 
 // EmploymentRate is the resolver for the employmentRate field.
