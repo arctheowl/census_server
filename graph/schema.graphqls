@@ -1,0 +1,72 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+type Query {
+  EmploymentRate: EmploymentRate!
+  YearlyEmploymentRate: EmploymentRate!
+  MonthlyEmploymentRate: EmploymentRate!
+  QuarterlyEmploymentRate: EmploymentRate!
+  EmploymentRateYear(Year: String!): EmploymentRateData!
+  Population: [Population!]
+  PopulationYear(Year: String!): Population!
+  GenderIdentity: [GenderIdentity!]
+  ping: String!
+}
+
+type EmploymentRate {
+  Meta: Meta
+  Data: [EmploymentRateData]
+}
+
+
+
+type EmploymentRateData {
+  timeperiod: String
+  maleemployment: String
+  femaleemployment: String
+  maleaged1617: String
+  maleaged1824: String
+  maleaged2534: String
+  maleaged3549: String
+  maleaged5064: String
+  maleaged65: String
+  femaleaged1617: String
+  femaleaged1824: String
+  femaleaged2534: String
+  femaleaged3549: String
+  femaleaged5064: String
+  femaleaged65: String
+  allaged1617: String
+  allaged1824: String
+  allaged2534: String
+  allaged3549: String
+  allaged5064: String
+}
+
+type Population {
+  timeperiod: String
+  ukpop: String
+  engpop: String
+  wapop: String
+  nipop: String
+  scopop: String
+}
+
+type GenderIdentity {
+	location: String
+	allothergenders: String
+	differentfrombirth: String	
+	sameasbirth: String
+	nonbinary: String	
+	transman: String	
+	transwoman: String
+  unanswered: String		
+	total: String
+}
+
+type Meta {
+  Source: String
+  LastUpdated: String
+  NextRelease: String
+}

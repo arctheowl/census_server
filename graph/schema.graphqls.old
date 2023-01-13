@@ -1,0 +1,33 @@
+# GraphQL schema example
+#
+# https://gqlgen.com/getting-started/
+
+
+type Query {
+  employmentRate: [EmploymentRate!]
+  ping: String!
+}
+
+
+type EmploymentRate {
+ 	Timeperiod:       String  `json:"Timeperiod"`
+	MaleEmployment:   String `json:"MaleEmployment" gorm:"column:maleemployment"`
+	FemaleEmployment: String `json:"FemaleEmployment" gorm:"column:femaleemployment"`
+	MaleAged17:       String `json:"MaleAged17" gorm:"column:MaleAged16-17"`
+	MaleAged24:       String `json:"MaleAged24" gorm:"column:MaleAged18-24"`
+	MaleAged34:       String `json:"MaleAged34" gorm:"column:MaleAged25-34"`
+	MaleAged49:       String `json:"MaleAged49" gorm:"column:MaleAged35-49"`
+	MaleAged64:       String `json:"MaleAged64" gorm:"column:MaleAged50-64"`
+	MaleAged65:       String `json:"MaleAged65" gorm:"column:MaleAged65+"`
+	FemaleAged17:     String `json:"FemaleAged17" gorm:"column:FemaleAged16-17"`
+	FemaleAged24:     String `json:"FemaleAged24" gorm:"column:FemaleAged18-24"`
+	FemaleAged34:     String `json:"FemaleAged34" gorm:"column:FemaleAged25-34"`
+	FemaleAged49:     String `json:"FemaleAged49" gorm:"column:FemaleAged35-49"`
+	FemaleAged64:     String `json:"FemaleAged64" gorm:"column:FemaleAged50-64"`
+	FemaleAged65:     String `json:"FemaleAged65" gorm:"column:FemaleAged65+"`
+	AllAged17:        String `json:"AllAged17" gorm:"column:AllAged16-17"`
+	AllAged24:        String `json:"AllAged24" gorm:"column:AllAged18-24"`
+	AllAged34:        String `json:"AllAged34" gorm:"column:AllAged25-34"`
+	AllAged49:        String `json:"AllAged49" gorm:"column:AllAged35-49"`
+	AllAged64:        String `json:"AllAged64" gorm:"column:AllAged50-64"`
+}
